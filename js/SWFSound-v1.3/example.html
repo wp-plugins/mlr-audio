@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>Event based HTML Sound Example for SWFSound</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<script type="text/javascript" src="swfobject/swfobject.js"></script>
+		<script type="text/javascript" src="swfsound/swfsound.js"></script>
+	</head>
+	<body bgcolor="#ffffff">
+		<script type="text/javascript">
+			 /* <![CDATA[ */
+		
+					var		id_sound1,
+								id_sound2, 
+								id_sound3;
+
+					// Load the SWFSound Flash Engine
+					swfsound.embedSWF( 'swfsound/swfsound.swf' );
+
+					// When the engine is loaded, preload sounds
+					swfsound.onload = function()
+					{
+							// alert("Callback: SWFSound Flash successfully loaded ...");
+						 	id_sound1 = swfsound.loadSound( 'mp3/sound1.mp3', streamAndAutoPlay = false );
+			  		  id_sound2 = swfsound.loadSound( 'mp3/sound2.mp3', streamAndAutoPlay = false );
+				      id_sound3 = swfsound.loadSound( 'mp3/sound3.mp3', streamAndAutoPlay = false );
+					}
+
+ 			/* ]]> */
+		</script>
+		<br />
+		<strong>SWFSound Example</strong> (Sounds playing on mouseOver, stopping on mouseOut):<br />
+		<br />
+		<a href="#" onMouseOut="return swfsound.stopSound( id_sound1 );" onMouseOver="return swfsound.startSound( id_sound1 );">Test 1: Simple single playback</a><br />
+		<br />
+		<a href="#" onMouseOut="return swfsound.stopSound( id_sound2 );" onMouseOver="return swfsound.startSound( id_sound2, 0.0, 2 );">Test 2: Starting from beginning, looping twice</a><br />
+		<br />
+		<a href="#" onMouseOut="return swfsound.stopSound( id_sound3 );" onMouseOver="return swfsound.startSound( id_sound3, 10.0, 2 );">Test 3: Starting somewhere in the middle of the sound (10 seconds), then loop twice</a><br />
+		<br /><br /><hr />
+		<a href="javascript:streamingExample();">Streaming Example (Play on Click!)</A> &middot; <a href="javascript:streamingExamplePause();">Pause</a> &middot; <a href="javascript:streamingExampleStop();">Stop</a> &middot; Play Position: <span id="playpos"></span> &middot; Duration: <span id="duration"></span> &middot; Panning: <a href="javascript:streamPan(-100);">left</a> <a href="javascript:streamPan(0);">center</a> <a href="javascript:streamPan(100);">right</a> &middot; Volume: <a href="javascript:streamVolume(1);">1</a> <a href="javascript:streamVolume(10);">10</a> <a href="javascript:streamVolume(30);">30</a> <a href="javascript:streamVolume(60);">60</a> <a href="javascript:streamVolume(100);">100</a> </body>
+			<script type="text/javascript">
+				 /* <![CDATA[ */
+				 
+				 		var id_sound4;
+				 		
+				 		function updPlayPosition()
+				 		{
+				 					var obj = document.getElementById('playpos');
+				 					obj.innerHTML = swfsound.getPosition( id_sound4 );
+
+				 					var obj = document.getElementById('duration');
+				 					obj.innerHTML = swfsound.getDuration( id_sound4 );
+				 		}
+				 		
+				 		function onID3Event()
+				 		{
+				 					var id3obj = swfsound.getID3(id_sound4);
+				 					var str = '';
+
+				 					for ( j in id3obj )
+				 					{
+				 							str += j + ": " + id3obj[j] + "<br />";
+				 					}
+
+				 					document.getElement('id3info').innerHTML = str;
+				 		}
+
+						function streamingExample()
+						{
+									swfsound.stopSound( id_sound1 );
+									swfsound.stopSound( id_sound2 );
+									swfsound.stopSound( id_sound3 );
+
+								 	id_sound4 = swfsound.loadSound( 'mp3/sound1.mp3', streamAndAutoPlay = true, onLoadCallback = null, "onID3Event" );
+								 	swfsound.setPan( id_sound4, 0 /* 0 = center, -100 = left, +100 = right */ );
+								 	swfsound.setVolume( id_sound4, 90 /* 0 = silence, 100 = maximum */ );
+
+								 	setInterval( "updPlayPosition()", 10 );
+						}
+
+						function streamingExamplePause()
+						{
+									swfsound.pauseSound( id_sound4 );
+						}
+
+						function streamVolume( val )
+						{
+									swfsound.setVolume( id_sound4, val );
+						}
+
+						function streamPan( val )
+						{
+									swfsound.setPan( id_sound4, val );
+						}
+
+						function streamingExampleStop()
+						{
+									swfsound.stopSound( id_sound4 );
+						}
+
+ 				/* ]]> */
+			</script>
+			<div id="id3info" />
+</html>
