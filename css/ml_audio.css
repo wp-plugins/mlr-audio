@@ -164,6 +164,7 @@ cursor: pointer;
     top: 2px;
     width: 10px;
     z-index: 2;
+	transition:none !important;
 }
 .volume .ui-slider-handle {
 	position: absolute;
@@ -172,6 +173,7 @@ cursor: pointer;
 	height: 28px;
 	width: 6px;
 	outline: 0;
+	transition:none !important;
 }
 .volume .ui-slider-handle:hover {
     background:#000;
@@ -185,6 +187,7 @@ border-radius: 50%;
 height: 5px;
 width: 5px;
 outline: 0;
+
 }
 
 .tracker .ui-slider-range.ui-widget-header {
@@ -269,6 +272,7 @@ border-radius: 5px;
 cursor: pointer;
 position: absolute;
 z-index: 12;
+transition:none !important;
 }
 #pl_wrap {
 border-radius: 0px 0px 5px 5px;
