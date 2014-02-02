@@ -26,7 +26,7 @@ jQuery(function($) {
 					tracks = [];
 					var len = $('.playlist li').length;
 					for(var i = 0; i < len; i++) {
-							var	obj = {name: $('.playlist li:eq('+i+')').attr('title'),
+							var	mlobj = {name: $('.playlist li:eq('+i+')').attr('title'),
 									   album: $('.playlist li:eq('+i+')').attr('album'),
 									   cover: $('.playlist li:eq('+i+')').attr('cover'),
 									   height: $('.playlist li:eq('+i+')').attr('data-height'),
@@ -35,7 +35,7 @@ jQuery(function($) {
 									   ogg: $('.playlist li:eq('+i+')').attr('audiourlogg'),
 									   wav: $('.playlist li:eq('+i+')').attr('audiourlwav')
 									   };
-					tracks.push(obj);
+					tracks.push(mlobj);
 					}
 					
 					var trackCount = tracks.length,
@@ -47,7 +47,7 @@ jQuery(function($) {
 					
 					audio = document.getElementById('audio1');
 					
-					if (typeof(audio) === "undefined" || audio == null) {
+					if (typeof(audio) === "undefined" || audio == null || typeof(mlobj) === "undefined" || mlobj == null) {
 						
 						} else {
 						
