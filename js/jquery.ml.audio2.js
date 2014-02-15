@@ -6,8 +6,11 @@
  * 
  */
 jQuery(function($) {
+
+				
 				var supportsAudio = !!document.createElement('audio').canPlayType;
 				if(supportsAudio) {
+					
 					var index = 0,
 					playing = false,
 					seek = false,
@@ -41,9 +44,6 @@ jQuery(function($) {
 					var trackCount = tracks.length,
 					mlTitle = $('.audio_title'),
 					
-					
-					
-					// Important playing functions
 					
 					audio = document.getElementById('audio1');
 					
