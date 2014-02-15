@@ -45,7 +45,7 @@ echo '.playlist {background-color:' .$playlist_background.';}';
 
 /* Scroll bar */
 
-echo '#slider_vert .ui-slider-handle, #ml_audio_toggle_playlist {background-color:' .$scrollbar_color.';}';
+echo '#ml_audio_random_toggle, #slider_vert .ui-slider-handle, #ml_audio_toggle_playlist {background-color:' .$scrollbar_color.';}';
 
 /* Controls */
 
@@ -54,7 +54,7 @@ echo '#ml_controls {background-color:' .$controls_background.';}';
 /*  Header */
 
 echo '.player {background-color:' .$header_background. ';}';
-echo '.player {color:' .$header_text_color. ';}';
+echo '.player, .fa.fa-times, .fa.fa-check, .fa.fa-question, .fa.fa-bars, .fa.fa-music {color:' .$header_text_color. ';}';
 
 
 /* Buttons */

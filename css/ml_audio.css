@@ -252,7 +252,7 @@ font-size: 0.7em;
 }
 #ml_audio_toggle_playlist {width:24px; height:25px; display:block; position:absolute; bottom:-25px; right:20px;
 border-radius: 0px 0px 5px 5px;}
-.fa.fa-bars {font-size:18px; position:absolute; left: 4px; top: 4px; color: #FFF;}
+.fa.fa-bars {font-size:18px; position:absolute; left: 4px; top: 4px; color: #FFF;}#ml_audio_random_toggle {width:48px; height:25px; display:block; position:absolute; bottom:-25px; right:90px; border-radius: 0px 0px 5px 5px;}.fa.fa-music {top: 5px; position: absolute; left: 5px;}.fa.fa-question {font-size:10px; position:absolute; left: 22px; top: 2px;}.fa.fa-times, .fa.fa-check {right: 5px; top: 5px; position: absolute; font-size:15px;}
 #slider_vert {
 position: absolute;
 right: 0px;

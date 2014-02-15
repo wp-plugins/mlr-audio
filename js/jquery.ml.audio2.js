@@ -5,20 +5,19 @@
  * @author    Matthew Lillistone <matthewlillistone.co.uk>
  * 
  */
-jQuery(function($) {
 
-				
+jQuery(function($) {
 				var supportsAudio = !!document.createElement('audio').canPlayType;
 				if(supportsAudio) {
-					
 					var index = 0,
 					playing = false,
-					seek = false,
+					mlseek = false,
 					mlPlayerWidth = $('.player').attr('playwidth'),
 					auto = $('.player').attr('mlautoplay'),
 					mlPlaylistHeight = $('.player').attr('playheight'),
 					mlImageon = $('.cover').attr('imageon'),
 					mlImagepos = $('.cover').attr('imagepos'),
+					mlShuffle = $('.player').attr('mlshuffle'),
 					title = $('.audio_title'),
 					volume = $('.volume'),
 					tracker = $('.tracker'),
@@ -37,58 +36,68 @@ jQuery(function($) {
 									   file: $('.playlist li:eq('+i+')').attr('audiourlmp3'),
 									   ogg: $('.playlist li:eq('+i+')').attr('audiourlogg'),
 									   wav: $('.playlist li:eq('+i+')').attr('audiourlwav')
-									   };
+									   }
 					tracks.push(mlobj);
 					}
-					
+
 					var trackCount = tracks.length,
-					mlTitle = $('.audio_title'),
+						mlTitle = $('.audio_title');
 					
 					
-					audio = document.getElementById('audio1');
+					// Random toggle
+					var randomChecked = false;
+						
+					$('#ml_audio_random_toggle').bind('click',function(e) {
+						e.preventDefault();
+						if(randomChecked == false) {
+						$(this).children().eq(2).removeClass('fa-times').addClass('fa-check');
+						$(this).attr('title','Random Toggle On');
+						randomChecked = true;
+						}
+						else {
+							$(this).children().eq(2).removeClass('fa-check').addClass('fa-times');
+							$(this).attr('title','Random Toggle Off');
+							randomChecked = false;
+							}
+						}).bind('hover',function() {
+							randomChecked == false ? $(this).attr('title','Random Toggle Off') : $(this).attr('title','Random Toggle On');
+							});
 					
+					// Important playing functions
+					var audio = new Audio(document.getElementById('audio1'));
+
+					// audio = document.getElementById('audio1');
 					if (typeof(audio) === "undefined" || audio == null || typeof(mlobj) === "undefined" || mlobj == null) {
-						
 						} else {
-						
 					$(audio).bind('play', function() {
-					
 						$('.play').addClass('hidden');
 						$('.pause').removeClass('hidden');
 						playing = true;
-						
 					}).bind('pause', function() {
 						$('.play').removeClass('hidden');
 						$('.pause').addClass('hidden');
 						playing = false;
-						
-						
 					}).bind('ended', function() {
-						
+						if(randomChecked != undefined && randomChecked != false) {
+							index = Math.floor(Math.random() * trackCount - 1);
+						}
 						if((index + 1) < trackCount) {
 							index++;
 							loadTrack(index);
-							
 							var scrollTop = $('.playlist li.active').position().top; // Autoscrolling
 							var mlScrollTo = 100 - Math.ceil((scrollTop / $('.playlist').innerHeight()) * 100, 10);
 							if(index == trackCount - 1) {
-						
 								$('#slider_vert').slider('value',0);
-								
 								}
 								else {
-							
 								$('#slider_vert').slider('value',mlScrollTo);
 								}
-								
-								
 							audio.play();
 						} else {
 							audio.pause();
 							index = 0;
 							loadTrack(index);
 							$('#slider_vert').slider('value',100);
-							
 							$('.pl').addClass('hidden');
 						}
 					}).bind('timeupdate',function() {
@@ -99,12 +108,11 @@ jQuery(function($) {
 						e.preventDefault;
 						if((index - 1) > -1) {
 							index--;
-							
 							loadTrack(index);
 							var scrollTop = $('.playlist li.active').position().top; // Autoscrolling
 							var mlScrollTo = 100 - Math.ceil((scrollTop / $('.playlist').outerHeight()) * 100, 10);
 							$('#slider_vert').slider('value',mlScrollTo);
-							
+
 							if(playing) {
 								audio.play();	
 							}
@@ -112,7 +120,6 @@ jQuery(function($) {
 							audio.pause();
 							playing = false;
 							index = 0;
-							
 							loadTrack(index);
 								$('#slider_vert').slider('value',100);
 								$('.pause').addClass('hidden');
@@ -125,7 +132,6 @@ jQuery(function($) {
 						if((index + 1) < trackCount) {
 							index++;
 							loadTrack(index);
-							
 							var scrollTop = $('.playlist li.active').position().top; // Autoscrolling
 							var mlScrollTo = 100 - Math.ceil((scrollTop / $('.playlist').outerHeight()) * 100, 10);
 							if(index == trackCount - 1) {
@@ -134,7 +140,6 @@ jQuery(function($) {
 								else {
 									$('#slider_vert').slider('value',mlScrollTo);
 									}
-								
 							if(playing) {
 								audio.play();	
 							}
@@ -142,15 +147,12 @@ jQuery(function($) {
 							audio.pause();
 							playing = false;							
 							index = 0;
-							
 							loadTrack(index);
-								
 								$('#slider_vert').slider('value',100);
 								$('.pause').addClass('hidden');
 								$('.pl').addClass('hidden');
 								$('.play').removeClass('hidden');
 						}
-						
 					}),
 					li = $('.playlist li').click(function() {
 						var id = parseInt($(this).index());
@@ -196,12 +198,10 @@ jQuery(function($) {
 							}
 					},
 					loadTrack = function(id) {
-					
 						index = id;
 						$('.active').removeClass('active');
 						$('.playlist li:eq(' + id + ')').addClass('active');
 						mlTitle.html('<span class="preTitle">Song: </span>' + tracks[id].name);
-						
 						var file_string = tracks[id].file;
 						var abbr_string = file_string.slice(0, -4);
 						audio.src = abbr_string + mlExtension;
@@ -213,8 +213,6 @@ jQuery(function($) {
 						else {
 							$('.album_title').text('');
 							}
-						
-								
 						var pw = $('.player').width();
 						if(pw > 345) {
 							$('.player').height(tracks[id].height);
@@ -228,17 +226,14 @@ jQuery(function($) {
 								$('.audio_title, .album_title').css({'padding-left':'10px'});
 								$('.player .cover').addClass('hidden');
 								}
-						
 					},
 					playTrack = function(id) {
 						loadTrack(id);
 						audio.play();
 					};
-					
-					
+
 					mlExtension = audio.canPlayType('audio/mpeg') ? '.mp3' : audio.canPlayType('audio/ogg') ? '.ogg' : audio.canPlayType('audio/wav') ? '.wav' : '';
-						
-					
+
 					// Autoplay?
 					autoPlay = function() {
 					if(auto != undefined && auto.length != 0) {
@@ -249,21 +244,17 @@ jQuery(function($) {
 							loadTrack(index);
 							}
 					}
-					
 					autoPlay();
-					
-					
-					
-					
+
 					audio.volume = defaultVol;
-					
+
 					tracker.width(cw);
 
 					$(window).resize(function() {
 					var cw = $('#ml_controls').width();
 					$('.tracker').width(cw);
 					});
-					
+
 					var changeHeight = function(id) {
 					index = id;
 					var pw = $('.player').width();
@@ -273,19 +264,19 @@ jQuery(function($) {
 							showImageCss();
 							$('.pl').addClass('hidden');
 							ph = tracks[id].height;
-			
+
 							if(mlImagepos == 'right') {
 							$('.audio_title, .album_title').css({'padding-left':'10px'});
 							}
 							else {
 							$('.audio_title, .album_title').css({'padding-left':'0'});
 							}
-							
+
 							if($('.cover').attr('imageon').length != 0) {} else {
 							console.log('Oops');
 								$('.album_title').css({'padding-bottom':'10px'});
 								}
-								
+
 							$('.player').css({'padding-bottom':'0','height':ph});
 							}
 							else {
@@ -298,16 +289,13 @@ jQuery(function($) {
 						$('.player').css({'height':'auto','padding-bottom':'10px'});
 						}
 					}
-					
-					
-					
+
 					if(audio.paused) {
 						$('.pl').addClass('hidden');
 						}
-						
-					
+
 					// Functionality for player
-					
+
 					$('.play').bind('click',function() {
 						if(!playing);
 						audio.play();
@@ -315,9 +303,8 @@ jQuery(function($) {
 						tracker.slider("option", "max", audio.duration);
 						$(this).addClass('hidden');
 						$('.pause').removeClass('hidden');
-						
 						});
-						
+
 					$('.pause').bind('click',function() {
 						if(playing) {
 						audio.pause();
@@ -326,12 +313,13 @@ jQuery(function($) {
 						else {
 							audio.play();
 							}
+
 						$(this).addClass('hidden');
+
 						$('.play').removeClass('hidden');
-						
 						});
-					
-						startTime = $('#audio1').bind('loadedmetadata',function() {
+
+						startTime = $(audio).bind('loadedmetadata',function() {
 						var dur = parseInt(audio.duration),
 						curTime = parseInt(audio.currentTime),
 						min = Math.floor(dur / 60, 10),
@@ -341,9 +329,8 @@ jQuery(function($) {
 						$('#timeleft').text(curMins + ' : ' + (curSecs > 9 ? curSecs : '0' + curSecs) + '   |   -' + min + ' : ' + (sec > 9 ? sec : '0' + sec));
 						tracker.slider('option', 'max', audio.duration);
 						});
-						
-					
-					$('#audio1').bind('timeupdate',function() {
+
+					$(audio).bind('timeupdate',function() {
 						var songDuration = parseInt(audio.duration),
 						timeRemaining = parseInt(songDuration - audio.currentTime, 10),
 						curTime = parseInt(audio.currentTime),
@@ -355,14 +342,14 @@ jQuery(function($) {
 						if(!isNaN(mins) || !isNaN(seconds)){
 						$('#timeleft').text(curMins + ' : ' + (curSecs > 9 ? curSecs : '0' + curSecs) + '   |   -' + mins + ' : ' + (seconds > 9 ? seconds : '0' + seconds));
 						}
-						if (!seek) { handle.css({'left': now + '%'}); }
+						if (!mlseek) { handle.css({'left': now + '%'}); }
 						});
-						
+
 					var plugins_url = volume.attr('data-plugins');	
 					var opts = volume.css('background-image','url(' + plugins_url + '/mlr-audio/css/images/volume_half.png)');
-					
+
 					// Volume slider
-					
+
 					volume.slider({
 						range: 'min',
 						min: 0,
@@ -372,7 +359,6 @@ jQuery(function($) {
 						slide: function(e,ui) {
 							audio.volume = ui.value / 100;
 							defaultVol = ui.value / 100;
-							
 							},
 						change: function(e,ui) {
 						var currentValue = ui.value;
@@ -389,28 +375,16 @@ jQuery(function($) {
 											$(this).css('background-image','url(' + plugins_url + '/mlr-audio/css/images/volume_down.png)');
 											}
 						}
-							
-						
 					});
-					
+
 					// On volume mouseover show volume value as title
 					$('.volume .ui-slider-handle').on('mouseover',function() {
-						if(audio.muted) {
-							$(this).attr('title','double-click to unmute');
 							$(this).parent().attr('title','vol = ' + volume.slider('value') + '%');
-							}
-							else {
-						$(this).attr('title','double-click to mute');
-						$(this).parent().attr('title','vol = ' + volume.slider('value') + '%');
-						}
 					});
-					
-					
-					
+
 					// Change image in volume div depending on handle value
 					$('.volume .ui-slider-handle').bind('mousedown', function(e){
 							$('.volume .ui-slider-handle').bind('mousemove', function(e){
-							
 								dragged = e.pageX,
 								movement = dragged;
 								movement = volume.slider('value');
@@ -429,29 +403,23 @@ jQuery(function($) {
 							});
 
 							$('.volume .ui-slider-handle').bind('mouseup.mlDown',function(e){
-								
 								$('.volume .ui-slider-handle').removeClass('dragged');
 								$(this).unbind('mousemove');
-								
 							});
 						});
-					
-						
+
 					// Tracker slider
-					
+
 					tracker.slider({
 						range: 'min',
 						min: 0,
 						max: audio.duration,
 						animate: true,
-						
 						slide: function(e,ui) {
 							audio.currentTime = ui.value;
 							},
-						
 						});
-						
-						
+
 					/*
 					if((audio.buffered.length != 0) && (audio.buffered != undefined)) {
 					var progressVal = parseInt(((audio.buffered.end(0) / audio.duration) * 100),10);
@@ -461,11 +429,9 @@ jQuery(function($) {
 						value: progressVal
 						});	
 					*/	
-					
-					
+
 					// Scroll bar
 					function mlScrollbar($scrolled) {
-					
 					if(mlPlaylistHeight.length !== 0) {
 						if(mlPlaylistHeight < 200) {
 						mlPlaylistHeight = 200;
@@ -479,7 +445,6 @@ jQuery(function($) {
 						lockedplHeight = plHeight,
 						lockedDiff = lockedplHeight - sbInit,
 						hDiff = plHeight - sbInit;
-						
 						if(hDiff > 0) {
 						var prop = hDiff / plHeight,
 						handleHeight = Math.ceil((1 - prop) * sbInit);
@@ -489,11 +454,10 @@ jQuery(function($) {
 						}
 						$('#pl_wrap').css({'height':''+sbInit+'px','overflow':'hidden','position':'relative'});
 						$wrap = $('#pl_wrap');
-						
+
 						if($wrap.find('#slider_vert').length == 0) {
 							$wrap.append('<div id="slider_vert"></div>');
 							}
-						
 						$('#slider_vert').slider({
 											orientation:'vertical',
 											range:'min',
@@ -505,11 +469,8 @@ jQuery(function($) {
 											if($scrolled.css('display') != 'none') {
 												var tVal = -((100-ui.value)*hDiff/100);
 												}
-												
 												$scrolled.css({top:tVal});
-											
 												$('#slider_vert .ui-slider-range').height(ui.value+'%');
-												
 											},
 											change: function(event, ui) {
 											if($scrolled.css('display') != 'none') {	
@@ -518,38 +479,39 @@ jQuery(function($) {
 													if(!$scrolled.is(':animated')) {
 													$scrolled.animate({top:tVal},300);
 													}
-												
 												$('#slider_vert .ui-slider-range').height(ui.value+'%');
-												
-													
 											}
 						});
-						
+
 						var scrollable = sbInit - handleHeight,
 						sliderMargin = (sbInit - scrollable)*0.5;
 						$('#slider_vert .ui-slider-handle').css({height:handleHeight,'margin-bottom':-0.5*handleHeight});
 						$('#slider_vert.ui-slider').css({height:scrollable,'margin-top':sliderMargin});		
 						}
-						
 						$('#slider_vert.ui-slider').click(function(event) {
 						event.stopPropagation();
 						});
-						
+
 					} // End mlScrollbar		
-					
+
 					mlScrollbar($('.playlist'));
-					
-					
+
 					// Window resize function
+
 					$(window).resize(function() {
 						mlScrollbar($('.playlist'));
 						changeHeight(index);
 						});
-					
-									
-					
+
+							
+
 				}	// End if undefined
+
 			} // End if supports audio
+			
+			
 }); // End function
+
 				
+
 			
